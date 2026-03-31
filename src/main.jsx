@@ -6,6 +6,8 @@ import App from './App.jsx'
 import { ToastContainer } from 'react-toastify';
 import AuthContextProvider from './context/AuthContext.jsx';
 import UserContextProvider from './context/UserContext.jsx';
+import BookmarksProvider from './context/BookmarksContext.jsx';
+import FollowProvider from './context/FollowContext.jsx';
 
 
 
@@ -15,10 +17,14 @@ createRoot(document.getElementById('root')).render(
     <HeroUIProvider>
       <AuthContextProvider>
         <UserContextProvider>
-          
-            <App />
-            <ToastContainer />
-          
+          <FollowProvider>
+            <BookmarksProvider>
+
+              <App />
+              <ToastContainer />
+              
+            </BookmarksProvider>
+          </FollowProvider>
         </UserContextProvider>
       </AuthContextProvider>
     </HeroUIProvider>

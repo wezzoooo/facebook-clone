@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { BsEmojiSmile, BsSendFill } from 'react-icons/bs'
 import { Button } from '@heroui/react'
-import { createComment } from '../../services/commentsServices'
+import { createComment, getPostComments } from '../../services/commentsServices'
 
 export default function CommentInput({ postId, setPostComments }) {
     const [commentMsg, setCommentMsg] = useState("")
@@ -12,11 +12,13 @@ export default function CommentInput({ postId, setPostComments }) {
 
         setIsLoading(true)
         try {
-            const { data } = await createComment({
-                content: commentMsg,
-                post: postId
+            await createComment(postId,{
+                content: commentMsg
             })
-            setPostComments(data.comments)
+
+            const { data } = await getPostComments(postId)
+            setPostComments(data?.data?.comments || [])
+
             setCommentMsg("")
         } catch (error) {
             console.log(error)
@@ -26,13 +28,13 @@ export default function CommentInput({ postId, setPostComments }) {
     }
 
     return (
-        <div className="flex items-center gap-3 p-4 border-b border-gray-100">
+        <div className="flex items-center gap-3 p-4">
             <input
                 value={commentMsg}
                 onChange={(e) => setCommentMsg(e.target.value)}
                 type="text"
                 placeholder="Write your comment"
-                className="flex-1 bg-gray-50 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 bg-gray-50 rounded-full px-4 py-2 text-sm focus:outline-none"
             />
 
             <Button
@@ -41,11 +43,11 @@ export default function CommentInput({ postId, setPostComments }) {
                 color="primary"
                 onPress={addComment}
             >
-                <BsSendFill className="w-5 h-5" />
+                <BsSendFill />
             </Button>
 
             <button className="text-gray-400 hover:text-yellow-500">
-                <BsEmojiSmile className="w-5 h-5" />
+                <BsEmojiSmile />
             </button>
         </div>
     )

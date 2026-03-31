@@ -2,6 +2,7 @@ import * as z from "zod"
 
 export const registerSchema = z.object({
     name: z.string().nonempty("Name is Required").min(3, "Name must be atleast 3 characters").max(15, "Name must not exceed 15 characters"),
+    username: z.string().nonempty("Nis Required").min(3, "UserName must be atleast 3 characters").max(15, "UserName must not exceed 15 characters"),
     email: z.email("Email is Required"),
     password: z.string().nonempty("Password is Required").regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/, "Password must be atleast 8 characters"),
     rePassword: z.string().nonempty("RePassword is Required"),

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { getLoggedUserData } from '../services/postsServices'
+import { getLoggedUserData } from '../services/usersServices'
 import { authContext } from './AuthContext'
 
 
@@ -16,7 +16,7 @@ export default function UserContextProvider({ children }) {
         try {
             setIsLoading(true)
             const { data } = await getLoggedUserData()
-            setUserData(data.user)
+            setUserData(data.data.user)
         } catch (error) {
             console.log(error);
 

@@ -1,14 +1,23 @@
 import React, { useContext, useRef, useState } from 'react'
 import { userContext } from '../../context/UserContext'
-import { uploadUserProfile } from '../../services/postsServices'
-import { Spinner, useDisclosure } from "@heroui/react";
+import { uploadUserProfile } from '../../services/usersServices'
+import { Spinner, useDisclosure, Modal, ModalContent, ModalBody } from "@heroui/react";
 import ChangePasswordModal from "../ChangePasswordModal/ChangePasswordModal";
+import { BookmarksContext } from "../../context/BookmarksContext"
 
 
 export default function ProfileHeader() {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const { userData, setUserData } = useContext(userContext)
     const [isUploading, setIsUploading] = useState(false)
+    const {
+        isOpen: isBookmarkOpen,
+        onOpen: openBookmarks,
+        onOpenChange: onBookmarkChange
+    } = useDisclosure();
+
+    const { bookmarkedPosts, isLoading } = useContext(BookmarksContext)
+
     const fileInput = useRef()
 
     function openFileInput() {
@@ -35,13 +44,15 @@ export default function ProfileHeader() {
             setIsUploading(false)
         }
     }
+
+
     return (
         <div>
             <div className="w-full flex justify-center" style={{ height: '348px' }}>
                 <div className="flex flex-col">
                     <div
                         className="relative bg-gray-100 md:rounded-bl-lg rounded-br-lg"
-                        style={{ width: '940px', height: '348px' , background: "#b43aaa" , background: "linear-gradient(90deg,rgba(180, 58, 170, 1) 0%, rgba(253, 29, 29, 1) 50%, rgba(252, 176, 69, 1) 100%)"}}
+                        style={{ width: '940px', height: '348px', background: "linear-gradient(90deg,rgba(180, 58, 170, 1) 0%, rgba(253, 29, 29, 1) 50%, rgba(252, 176, 69, 1) 100%)" }}
                     >
                         <img
                             src={userData?.photo}
@@ -56,7 +67,15 @@ export default function ProfileHeader() {
                             onChange={handleFileChange}
                             hidden
                         />
-                        {isUploading && <Spinner label="Loading..." className='absolute top-72 inset-x-96 text-center'/>}
+                        {isUploading && <Spinner label="Loading..." className='absolute top-72 inset-x-96 text-center' />}
+
+
+                        <button
+                            onClick={openBookmarks}
+                            className="absolute top-4 right-4 text-white text-sm bg-black/30 px-2 py-1 rounded"
+                        >
+                            Saved
+                        </button>
                     </div>
                 </div>
             </div>
@@ -102,6 +121,46 @@ export default function ProfileHeader() {
                     </ul>
                 </div>
             </div>
+            <Modal isOpen={isBookmarkOpen} onOpenChange={onBookmarkChange}>
+                <ModalContent>
+                    <ModalBody className="p-4">
+
+                        <h2 className="text-lg font-bold mb-3">
+                            Saved Items
+                        </h2>
+
+                        {isLoading ? (
+                            <p>Loading...</p>
+                        ) : bookmarkedPosts.length === 0 ? (
+                            <div className="text-center text-gray-400">
+                                No bookmarks yet
+                            </div>
+                        ) : (
+                            <div className="flex flex-col gap-3 max-h-96 overflow-y-auto">
+
+                                {bookmarkedPosts.map(post => (
+                                    <div key={post._id} className="mb-4 border rounded p-2">
+
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <img src={post.user.photo} className="w-8 h-8 rounded-full" />
+                                            <span className="font-semibold">{post.user.name}</span>
+                                        </div>
+
+                                        <p>{post.body}</p>
+
+                                        {post.image && (
+                                            <img src={post.image} className="w-full h-40 object-cover mt-2" />
+                                        )}
+
+                                    </div>
+                                ))}
+
+                            </div>
+                        )}
+
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
         </div>
     )
 }

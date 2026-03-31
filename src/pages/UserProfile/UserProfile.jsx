@@ -5,6 +5,7 @@ import ProfileHeader from '../../components/ProfileHeader/ProfileHeader'
 import CreatePost from '../../components/CreatePost/CreatePost'
 import PostCard from '../../components/PostCard/PostCard'
 import { getAllPosts } from '../../services/postsServices'
+import FriendsList from '../../components/FriendsList/FriendsList'
 
 export default function UserProfile() {
     const { userData } = useContext(userContext)
@@ -14,7 +15,7 @@ export default function UserProfile() {
         try {
             const { data } = await getAllPosts()
 
-            const posts = data?.posts || []
+            const posts = data?.data?.posts || []
 
             if (!userData?._id) return
 
@@ -25,7 +26,7 @@ export default function UserProfile() {
             setUserPosts(filtered)
         } catch (error) {
             console.log(error)
-            setUserPosts([]) 
+            setUserPosts([])
         }
     }
 
@@ -33,28 +34,31 @@ export default function UserProfile() {
         if (userData?._id) {
             fetchUserPosts()
         }
-    }, [userData?._id]) 
+    }, [userData?._id])
 
     return (
-        <div className="h-screen bg-gray-100">
-            <div className=" shadow bg-white">
-                {/* PROFILE HEADER */}
-                <ProfileHeader />
+        <div className="bg-gray-100 min-h-screen">
 
-                <div className="flex justify-center gap-8 mt-4">
+            <div className="bg-white shadow">
+                <ProfileHeader />
+            </div>
+
+            <div className="max-w-7xl mx-auto px-2 sm:px-4 mt-4">
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
                     {/* LEFT */}
-                    <div className="w-80 flex flex-col gap-4">
+                    <div className="hidden lg:flex flex-col gap-4">
                         <div className="p-4 shadow rounded-lg bg-white">Intro</div>
                         <div className="p-4 shadow rounded-lg bg-white">Photos</div>
-                        <div className="p-4 shadow rounded-lg bg-white">Friends</div>
+                        <FriendsList/>
                     </div>
 
                     {/* POSTS */}
-                    <div className="w-2/5 flex flex-col gap-4">
-                        {/* Create Post */}
+                    <div className="lg:col-span-2 flex flex-col gap-4">
+
                         <CreatePost getPosts={fetchUserPosts} />
 
-                        {/* Post List */}
                         {userPosts.length === 0 ? (
                             <p className="text-center text-gray-400 mt-4">
                                 No posts yet
@@ -69,7 +73,9 @@ export default function UserProfile() {
                             ))
                         )}
                     </div>
+
                 </div>
+
             </div>
         </div>
     )

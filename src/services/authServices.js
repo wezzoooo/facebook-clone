@@ -13,3 +13,12 @@ export async function loginUser(formData) {
     return data
 
 }
+
+export async function changePassword(formData) {
+    const data = await axios.patch(`${API_URL}/users/change-password`, formData, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`
+        }
+    })
+    return data
+}

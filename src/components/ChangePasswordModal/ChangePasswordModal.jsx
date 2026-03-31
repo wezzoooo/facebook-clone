@@ -12,7 +12,7 @@ import {
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { changePasswordSchema } from '../../lib/validation/changePasswordSchema'
-import { changePassword } from "../../services/postsServices"
+import { changePassword } from "../../services/authServices"
 import { Flip, toast } from "react-toastify"
 import { IoEye, IoEyeOff } from "react-icons/io5"
 import { useState } from "react"

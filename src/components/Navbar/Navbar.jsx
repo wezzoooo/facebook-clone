@@ -21,6 +21,13 @@ import { useContext } from "react";
 import { authContext } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import { userContext } from "../../context/UserContext";
+import { useEffect, useState } from "react"
+import {
+  getNotifications,
+  getUnreadCount,
+  markAllAsRead
+} from "../../services/notificationsServices"
+import { markAsRead } from "../../services/notificationsServices"
 
 
 
@@ -32,11 +39,43 @@ export default function Navbar() {
   const { setToken } = useContext(authContext)
   const { userData, isLoading } = useContext(userContext)
 
+  const [notifications, setNotifications] = useState([])
+  const [unreadCount, setUnreadCount] = useState(0)
+  const [open, setOpen] = useState(false)
+
 
   function logOutUser() {
     localStorage.removeItem("userToken")
     setToken(false)
   }
+
+  useEffect(() => {
+    async function loadNotifications() {
+      const { data } = await getNotifications()
+      setNotifications(data.data.notifications)
+    }
+
+    async function loadCount() {
+      const { data } = await getUnreadCount()
+      setUnreadCount(data.data.count)
+    }
+
+    loadNotifications()
+    loadCount()
+  }, [])
+
+  async function openNotifications() {
+    setOpen(true)
+
+    const { data } = await getNotifications()
+    setNotifications(data?.data?.notifications || [])
+  }
+
+  async function handleMarkAll() {
+    await markAllAsRead()
+    setUnreadCount(0)
+  }
+
   return (
     <>
       <HeroNavbar isBordered maxWidth="xl">
@@ -69,10 +108,27 @@ export default function Navbar() {
 
         <NavbarContent as="div" className="items-center" justify="end">
 
-          <NavbarBrand className=" rounded-full bg-gray-200 p-2 grow-0">
-            <Badge color="danger" content="5">
-              <IoIosNotifications className="text-2xl" />
-            </Badge>
+          <NavbarBrand className=" rounded-full bg-gray-200 py-1 px-1.5 grow-0">
+            <Dropdown>
+              <DropdownTrigger>
+                <div onClick={openNotifications} className="cursor-pointer">
+                  <Badge color="danger" content={unreadCount || 0}>
+                    <IoIosNotifications className="text-2xl" />
+                  </Badge>
+                </div>
+              </DropdownTrigger>
+
+              <DropdownMenu>
+                {notifications.map(n => (
+                  <DropdownItem
+                    key={n._id}
+                    onClick={() => markAsRead(n._id)}
+                  >
+                    {n.content}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
           </NavbarBrand>
 
           <NavbarBrand className=" rounded-full bg-gray-200 p-2 grow-0">

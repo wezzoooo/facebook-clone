@@ -1,10 +1,11 @@
 import React from 'react'
 import {RiHome2Fill} from 'react-icons/ri'
-import {FaStore,FaUserFriends,FaUsers} from 'react-icons/fa'
+import {FaStore,FaUsers} from 'react-icons/fa'
 import {TfiTag} from 'react-icons/tfi'
 import {IoFlag} from 'react-icons/io5'
 import { MdOutlineFavorite } from "react-icons/md";
 import {NavLink} from 'react-router-dom'
+import SuggestedFriends from '../SuggestedFriends/SuggestedFriends'
 
 const menuOptions = [
     {
@@ -12,12 +13,6 @@ const menuOptions = [
         icon: <RiHome2Fill size={20} className='text-blue-500'/>,
         bgColor: 'bg-blue-500/10',
         path: '/home'
-    },
-    {
-        label : 'Frinds',
-        icon: <FaUserFriends size={20} className='text-green-500'/>,
-        bgColor: 'bg-green-500/10',
-        path: '/frinds'
     },
     {
         label : 'Groups',
@@ -67,6 +62,7 @@ export default function Sidebar() {
                         <span className='text-sm font-medium'>{options.label}</span>
                     </NavLink>
                 ))}
+                <SuggestedFriends/>
             </div>
         </div>
     </>

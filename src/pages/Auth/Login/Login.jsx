@@ -34,9 +34,9 @@ export default function Login() {
       setErrorMsg("")
       const {data} = await loginUser(formData)
       console.log(data);
-      localStorage.setItem("userToken", data?.token)
-      setToken(data?.token)
-      if (data.message == "success") {
+      localStorage.setItem("userToken", data?.data?.token)
+      setToken(data?.data?.token)
+      if (data.success) {
         toast.success("Logged In Successfully", {
           position: "top-right",
           autoClose: 2000,
@@ -47,6 +47,8 @@ export default function Login() {
           theme: "light",
           transition: Flip,
         })
+        
+        
       }
       navigate("/")
     } catch (error) {
@@ -69,7 +71,7 @@ export default function Login() {
 
   return (
     <>
-      <main className='max-w-3xl w-full space-y-5'>
+      <main className='max-w-md mx-auto w-full space-y-5 px-4'>
         <h1 className='text-3xl font-bold'>
           Welcome Back To Nexify - Connect Now!
         </h1>
@@ -86,7 +88,7 @@ export default function Login() {
 
           <div className="flex justify-between items-center">
             <Button isLoading={isSubmitting} type='submit' color="primary">Login</Button>
-            <p>Dosent have an account ?
+            <p>Dosen't have an account ?
               <Link className='font-bold ms-1' to={"/register"}>
                 Sign Up
               </Link>

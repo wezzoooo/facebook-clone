@@ -19,6 +19,7 @@ export default function Register() {
     mode: "all",
     defaultValues: {
       name: "",
+      username: "",
       email: "",
       password: "",
       rePassword: "",
@@ -70,7 +71,7 @@ export default function Register() {
 
   return (
     <>
-      <main className='max-w-3xl w-full space-y-5'>
+      <main className='max-w-md mx-auto w-full space-y-5 px-4'>
         <h1 className='text-3xl font-bold'>
           Welcome To Nexify - Connect Now!
         </h1>
@@ -78,6 +79,9 @@ export default function Register() {
         <form className='space-y-5' onSubmit={handleSubmit(onSubmit)}>
           <Input {...register("name")} label="Name" type="text"
             errorMessage={errors.name?.message} isInvalid={Boolean(errors.name)} />
+
+          <Input {...register("username")} label="User Name" type="text"
+            errorMessage={errors.username?.message} isInvalid={Boolean(errors.username)} />
 
           <Input {...register("email")} label="Email" type="email"
             errorMessage={errors.email?.message} isInvalid={Boolean(errors.email)} />
